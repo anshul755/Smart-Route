@@ -1,126 +1,140 @@
-# Smart Route 360
+# SmartRoute360
 
-Smart Route 360 is an interactive pathfinding visualizer built with React, Vite, and Leaflet.
-It loads a real road graph and compares multiple graph search algorithms with live map exploration, route drawing, and vehicle animation.
+SmartRoute360 is a React + Vite pathfinding visualizer built on top of a road-network graph and a Leaflet map. It lets you choose a start point, destination, and algorithm, then visualize node exploration, the final route, blocked nodes, and a realistic vehicle animation on the computed path.
 
-## Highlights
+## Features
 
-- Interactive map-based route selection
-- Multiple algorithm support:
-	- A*
-	- Dijkstra
-	- Bidirectional Dijkstra
-	- BFS (Breadth-First Search)
-	- Greedy Best-First Search
-	- DFS (Depth-First Search)
-- Live explored-node and final-route rendering
-- Adjustable simulation settings:
-	- Heuristic weight
-	- Traffic weight
-	- Vehicle speed
-- Block/unblock nodes on the graph for obstacle simulation
-- Realistic vehicle movement along the computed route
-- Metrics panel with time, explored nodes, route size, and distance
+- Visualize shortest-path and search algorithms on a real map
+- Switch between A*, Dijkstra, Bidirectional Dijkstra, BFS, Greedy Best-First Search, and DFS
+- Set start and end points directly from the map
+- Block and unblock graph nodes using keyboard-assisted map interaction
+- View live metrics such as runtime, explored nodes, path size, and route distance
+- Animate a vehicle moving along the resulting route
 
 ## Tech Stack
 
 - React 19
-- Vite 7
+- Vite
 - Leaflet
-- Recharts
+- Tailwind CSS
 - Lucide React
-- Tailwind CSS 4
-
-## Controls
-
-- Single click: set Start point
-- Double click: set End point
-- Ctrl + click: block or unblock nearest node
-- Scroll: zoom map
-- Drag: pan map
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ (recommended: latest LTS)
+- Node.js 18 or later
 - npm
 
-### Installation
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-### Run Development Server
+### Start the development server
 
 ```bash
 npm run dev
 ```
 
-Open the local URL shown in terminal (usually http://localhost:5173).
-
-### Build for Production
+### Build for production
 
 ```bash
 npm run build
 ```
 
-### Preview Production Build
-
-```bash
-npm run preview
-```
-
-### Lint
+### Lint the project
 
 ```bash
 npm run lint
 ```
 
-## Data Pipeline
+### Preview the production build
 
-The route graph is loaded from:
-
-- `src/graph.json`
-
-If you need to regenerate graph data from GeoJSON, use the conversion script in:
-
-- `scripts/convertGeoJSON.js`
-
-Input example:
-
-- `scripts/export.geojson`
+```bash
+npm run preview
+```
 
 ## Project Structure
 
 ```text
-.
-|- public/
-|- scripts/
-|  |- convertGeoJSON.js
-|  |- export.geojson
-|- src/
-|  |- App.jsx
-|  |- copy1.jsx
-|  |- graph.json
-|  |- index.css
-|  |- main.jsx
-|  |- assets/
-|- index.html
-|- package.json
-|- vite.config.js
+Smart Route/
+├── public/
+├── scripts/
+│   ├── convertGeoJSON.js
+│   └── export.geojson
+├── src/
+│   ├── algorithms/
+│   │   └── pathfinding.js
+│   ├── assets/
+│   ├── components/
+│   │   ├── MapLegend.jsx
+│   │   ├── MapOverlay.jsx
+│   │   ├── MetricsPanel.jsx
+│   │   └── Sidebar.jsx
+│   ├── hooks/
+│   │   ├── useAlgorithms.js
+│   │   ├── useMapInit.js
+│   │   ├── useMapOverlays.js
+│   │   └── useVehicle.js
+│   ├── utils/
+│   │   ├── graphUtils.js
+│   │   ├── mathUtils.js
+│   │   └── PriorityQueue.js
+│   ├── App.jsx
+│   ├── graph.json
+│   ├── index.css
+│   └── main.jsx
+├── eslint.config.js
+├── index.html
+├── package.json
+└── vite.config.js
 ```
 
-## Notes
+## How It Works
 
-- The graph can be large, so production builds may show chunk-size warnings.
-- Rendering is optimized by sampling background nodes while keeping route accuracy.
+1. `src/graph.json` stores the road-network graph used by the application.
+2. `useMapInit` loads the graph and initializes the Leaflet map.
+3. `useAlgorithms` runs the selected pathfinding algorithm and prepares exploration data.
+4. `useMapOverlays` renders the explored nodes, blocked nodes, markers, and final route.
+5. `useVehicle` animates a vehicle marker along the computed path.
 
-## Repository
+## Map Controls
 
-GitHub: https://github.com/shiven365/Smart-Route
+- Single click: set the start point
+- Double click: set the destination
+- `Ctrl + Click`: block or unblock the nearest node
+- Scroll: zoom
+- Drag: pan the map
 
-## License
+## Algorithms Included
 
-This project is for educational and academic use.
+- A*
+- Dijkstra
+- Bidirectional Dijkstra
+- Breadth-First Search
+- Greedy Best-First Search
+- Depth-First Search
+
+## Graph Data Preparation
+
+The app already includes a prepared graph file at `src/graph.json`.
+
+The helper script in `scripts/convertGeoJSON.js` can be used to generate graph-style data from `scripts/export.geojson`. If you use this workflow, review the output path before running the script so the generated file lands where you want it.
+
+## Notes for Contributors
+
+- Keep commits grouped by feature area such as `core algorithms`, `map hooks`, or `UI components`
+- Avoid committing experimental files unless they are part of the final app
+- Prefer updating the modular files in `src/hooks`, `src/components`, `src/utils`, and `src/algorithms` instead of reviving older prototype files
+
+## Current Main Files
+
+- `src/App.jsx`: main application layout and composition
+- `src/hooks/useAlgorithms.js`: algorithm execution and run-state management
+- `src/hooks/useMapInit.js`: graph loading and map setup
+- `src/hooks/useMapOverlays.js`: map markers, explored nodes, and route polylines
+- `src/hooks/useVehicle.js`: vehicle animation logic
+- `src/algorithms/pathfinding.js`: all implemented search algorithms
+
